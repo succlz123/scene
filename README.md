@@ -2,11 +2,11 @@
 
 [简体中文版说明 >>>](/README_cn.md)
 
-Scene is a lightweight library of navigation and page segmentation based on view.
+The Scene is a lightweight library of navigation and page segmentation based on view.
 
-1. Simple and convenient navigation and stack management, support multi-stack
+1. Convenient and straightforward navigation and stack management, support multi-stack
 2. Improved lifecycle management and distribution
-3. Easier to implement complex cut-scenes animation 
+3. The simple way to implement complex cut-scenes animation 
 4. Support properties modification and recovery of Activity and Window 
 5. Support return value between Scenes, support request and grant permissions in Scene
 6. Support save and recovery state of Scene
@@ -15,29 +15,29 @@ Scene is a lightweight library of navigation and page segmentation based on view
 
 ## Introduce
 
-Scene is designed to replace the use of Activity and Fragment on navigation and page segmentation.
+The Scene is designed to replace the use of Activity and Fragment on navigation and page segmentation.
 
 The main problems of Activity:
 
-1. The stack management of Activity is weak, Intent and LaunchMode are confusing, even if various of hacks still can't completely avoid issues like black screen 
-2. The performance of Activity is poor, average startup time of an empty Activity is more than 60ms (on Samsung S9)
+1. The stack management of Activity is weak, Intent and LaunchMode are confusing, even if various of hacks still can't wholly avoid issues like black screen 
+2. The performance of Activity is weak, the average startup time of an empty Activity is more than 60ms (on Samsung S9)
 3. Because the Activity is forced to support states recovery, it causes some problems:
     - Transition animation has limited ability, difficult to implement complex interactive animations.
-    - Shared-element animation is basically unavailable, and there are some crashes unresolved in Android Framework.
-    - Every time starting a new Activity, onSaveInstance() of the previous Activity must be executed completely first, which will lose much performance.
+    - Shared-element animation is unavailable, and there are some crashes unresolved in the Android Framework.
+    - Each time a new Activity is started,  `onSaveInstance()` of the previous Activity must be executed entirely first, which will lose much performance.
 4. Activity relies on the Manifest file to cause injection difficulties, which also result in that Activity dynamics requires a variety of hacks
 
 The main problems of Fragment:
 
-1. There are many crashes that the Google official can't solve for a long time. Even if you don't use Fragment, it may still trigger a crash in the OnBackPressed() of AppCompatActivity.
-2. The add/remove/hide/show operation is not executed immediately. With nest Fragments even if you use commitNow(), the status update of the sub Fragments cannot be guaranteed.
-3. The support of animation is poor, Z-axis order cannot be guaranteed when switching
-4. Navigation management is weak, there is no advanced stack management except for basic push and pop
-5. The lifecycle of Fragment in native Fragment and Support-v4 packages is not exactly the same
+1. There are many crashes that Google official can't solve for a long time. Even if you don't use Fragment, it may still trigger a crash in the `OnBackPressed()` of AppCompatActivity.
+2. The add/remove/hide/show operation is not executed immediately. With nest Fragments even if you use `commitNow()`, the status update of the sub Fragments cannot be guaranteed.
+3. The support of animation is poor, and the Z-axis order cannot be guaranteed when switching
+4. Navigation management is weak, and there is no advanced stack management except for basic push and pop
+5. The lifecycle of Fragment in native Fragment and Support-v4 packages is not the same
 
 The Scene framework tries to solve these problems of the Activity and Fragment mentioned above.
 
-Provides a simple, reliable, and extensible API for a lightweight navigation and page segmentation solution
+Provides a simple, reliable, and extensible API for a lightweight navigation and page segmentation solution.
 
 At the same time, we provide a series of migration solutions to help developers gradually migrate from Activity and Fragment to Scene.
 
@@ -123,7 +123,7 @@ class ChildScene : Scene() {
 
 A new app can use Scene by directly inheriting the SceneActivity.
 
-But if your existing Activity is not convenient to change the inheritance relationship, you can directly using SceneDelegate to handle Scenes refer to the code of SceneActivity.
+But if your existing Activity is not convenient to change the inheritance relationship, you can directly use SceneDelegate to handle Scenes refer to the code of SceneActivity.
 
 Take the homepage migration plan of XiguaVideo as an example:
 
@@ -196,31 +196,29 @@ public void push(@NonNull Class<? extends Scene> clazz, @Nullable Bundle argumen
 }
 ~~~
 
-This completes the basic migration, you can open a new Scene page directly in this Activity.
+Now that the essential migration is complete, you can open the new Scene page directly from the Activity.
 
 ## Issues
 
-### Dialog
+### Dialogs
 
-A normal Dialog's Window is independent and in front of the Activity's Window,
-so if try to push a Scene in a opening Dialog, it will cause the Scene to appear behind it. 
-You can close the dialog box when click, or use Scene to implement the dialog instead of a system Dialog.
+A standard dialog's Window is independent and in front of the Activity's Window,
+so if you try to push a Scene in an opening Dialog, it will cause the Scene to appear behind it. 
+You can close the dialog when click, or use Scene to implement the dialog instead of a system dialog.
 
 ### SurfaceView and TextureView
 
-When the Scene is popping, the animation will be executed after the Scene life cycle is executed.
+When the Scene is popping, the animation will be executed after the Scene life cycle accomplished.
 However, if there is a SurfaceView or a TextureView, this process will cause the SurfaceView/TextureView to turn to black.
 
 You can get and re-assign the Surface before the animation end to avoid issues on TextureView, 
-and capture the last bitmap and set to a ImageView to avoid issues on SurfaceView.
+and capture the last bitmap and set to an ImageView to prevent the problems on SurfaceView.
 
 ### Status Bar related
 
-There is no official API of notch screen before Android P, and each vendor has its own implementation.
+There is no official API of notch screen before Android P, and each vendor has its implementation.
 
-If you try to hide the status bar with WindowFlag or View's UiVisibility, it will trigger the re-layout of the entire Activity.
-
-This may causes the layout change of the Scene inside, and the behaviors may be not as expected in some cases.
+If you try to hide the status bar with WindowFlag or View's UiVisibility, it will trigger the re-layout of the entire Activity that may cause the layout change of the Scene inside, and the behaviours maybe not as expected in some cases.
 
 ## License
 ~~~
